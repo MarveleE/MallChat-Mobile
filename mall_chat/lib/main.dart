@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:mall_chat/views/tab_bar/chat_home_view.dart';
+import 'package:mall_chat/views/tab_bar/tab_bar_view.dart';
 void main() {
   runApp(const MainApp());
 }
@@ -11,8 +12,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+        body: SizedBox.expand(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              ChatHomeView(),
+              ChatTabBarView(),
+            ],
+          ),
         ),
       ),
     );
