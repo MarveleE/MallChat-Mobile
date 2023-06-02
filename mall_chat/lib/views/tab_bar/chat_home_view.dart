@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mall_chat/Constants/color.dart';
 
 import 'chat_home_friends_view.dart';
+import 'chat_home_list_view.dart';
 
 class ChatHomeView extends StatelessWidget {
   const ChatHomeView({super.key});
@@ -24,11 +25,17 @@ class ChatHomeView extends StatelessWidget {
               const SizedBox(height: 34),
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: ThemeProvider.backgroundWhite,
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40)),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                    child: ChatHomeListContainerView(),
                   ),
                 ),
               ),

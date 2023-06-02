@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mall_chat/views/tab_bar/chat_home_view.dart';
 import 'package:mall_chat/views/tab_bar/tab_bar_view.dart';
+
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.dark
-  );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   runApp(const MainApp());
 }
 
