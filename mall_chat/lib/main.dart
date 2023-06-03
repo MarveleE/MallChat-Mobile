@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mall_chat/views/tab_bar/chat_home_view.dart';
+import 'package:mall_chat/views/home/chat_home_view.dart';
 import 'package:mall_chat/views/tab_bar/tab_bar_view.dart';
 
 void main() {
@@ -13,9 +13,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(fontFamily: "SFProDisplay"),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home: const Scaffold(
         body: SizedBox.expand(
           child: Stack(
             alignment: Alignment.bottomCenter,

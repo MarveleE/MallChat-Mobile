@@ -11,11 +11,12 @@ class ChatHomeListContainerView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Chat",
+          "Chats",
           style: TextStyle(
               color: ThemeProvider.textActivate,
               fontSize: 30,
-              fontWeight: FontWeight.w800),
+              fontWeight: FontWeight.w900,
+              fontStyle: FontStyle.italic),
         ),
         ChatHomeListView(),
       ],
@@ -47,7 +48,7 @@ class ChatHomeListView extends StatelessWidget {
         avatarName: "assets/avatars/03.png",
         name: "John Doe",
         message: "Awesome",
-        time: "10:00",
+        time: "Today, 12:25",
         unreadMessage: 2),
     ChatHomeListData(
         avatarName: "assets/avatars/04.png",
@@ -104,14 +105,49 @@ class ChatHomeListRowView extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Row(
         children: [
-          Image(
-              image: AssetImage(chatRowData.avatarName), width: 50, height: 50),
+          avatar(),
           const SizedBox(width: 10),
           nameAndMessage(),
           const Spacer(),
           unreadAndTime()
         ],
       ),
+    );
+  }
+
+  Stack avatar() {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Image(image: AssetImage(chatRowData.avatarName), width: 50, height: 50),
+        Transform.translate(
+          offset: const Offset(0, 9),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 60),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 7, right: 7),
+            height: 20,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(130),
+                boxShadow: const [
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    blurRadius: 8,
+                    spreadRadius: -4,
+                    color: Color(0xFF6F6F87),
+                  ),
+                ]),
+            child: Text("Awesomesss",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 10,
+                    color: ThemeProvider.textActivate,
+                    fontWeight: FontWeight.bold)),
+          ),
+        )
+      ],
     );
   }
 
@@ -138,7 +174,7 @@ class ChatHomeListRowView extends StatelessWidget {
           chatRowData.time,
           style: TextStyle(
               color: ThemeProvider.textSecondary,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               fontSize: 12),
         ),
       ],
@@ -153,7 +189,7 @@ class ChatHomeListRowView extends StatelessWidget {
           chatRowData.name,
           style: TextStyle(
               color: ThemeProvider.textActivate,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.bold,
               fontSize: 15),
         ),
         const SizedBox(height: 5),
