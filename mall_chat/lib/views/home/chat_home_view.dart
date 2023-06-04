@@ -33,8 +33,8 @@ class ChatHomeView extends StatelessWidget {
                       topRight: Radius.circular(40),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
                     child: ChatHomeListContainerView(),
                   ),
                 ),

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../Constants/color.dart';
-import '../chat_detail/chat_detail_main_view.dart';
+import '../../../Constants/color.dart';
 
 // ignore: must_be_immutable
 class ChatHomeListContainerView extends StatelessWidget {
@@ -102,24 +100,17 @@ class ChatHomeListRowView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () => Navigator.push(
-        context,
-        CupertinoPageRoute(builder: (context) => const ChatDetailMainView()),
-      ),
-      child: Container(
-        padding: const EdgeInsets.only(bottom: 30),
-        alignment: Alignment.topCenter,
-        child: Row(
-          children: [
-            avatar(),
-            const SizedBox(width: 10),
-            nameAndMessage(),
-            const Spacer(),
-            unreadAndTime()
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.only(bottom: 30),
+      alignment: Alignment.topCenter,
+      child: Row(
+        children: [
+          avatar(),
+          const SizedBox(width: 10),
+          nameAndMessage(),
+          const Spacer(),
+          unreadAndTime()
+        ],
       ),
     );
   }
