@@ -12,6 +12,7 @@ class ChatDetailViewModel extends ChangeNotifier {
   ScrollController scrollController = ScrollController();
   String? cursor;
   late Timer timer;
+  bool isLoading = false;
 
   ChatDetailViewModel() {
     timer = Timer.periodic(
@@ -24,30 +25,14 @@ class ChatDetailViewModel extends ChangeNotifier {
 
   void startChat() {
     subscription = channel.stream.listen((event) {
-      final responseData = json.decode(utf8.decode(event));
-      if (responseData["type"] == 5) {
+      print(event);
+      final responseData = json.decode(event);
+      if (responseData["type"] == 4) {
         final socketMessage = SocketMessage.fromJson(responseData);
-        // final socketMessageChangeList = socketMessageData["changeList"];
-        for (var item in socketMessage.data.changeList) {
-          if (item["activeStatus"] == 1) {
-            print("online");
-          } else {
-            print("offline");
-          }
-          Chat chat = Chat(
-            success: true,
-            data: ChatData(
-              cursor: "",
-              isLast: false,
-              list: [
-                ListElement(
-                  isMe: false,
-                  fromUser: FromUser(avatar: item.avatar, name: item.name),
-                )
-              ],
-            ),
-          );
-        }
+        print(socketMessage.data.message.content);
+        chatMessages.add(socketMessage.data);
+        notifyListeners();
+        scrollToBottom();
       }
     }, onError: (error) {
       print(error);
@@ -65,6 +50,7 @@ class ChatDetailViewModel extends ChangeNotifier {
   }
 
   void getChatHistory() async {
+    isLoading = true;
     var url = cursor == null
         ? Uri.parse(
             'https://api.mallchat.cn/capi/chat/public/msg/page?pageSize=20&roomId=1')
@@ -76,20 +62,37 @@ class ChatDetailViewModel extends ChangeNotifier {
       final responseData = json.decode(utf8.decode(response.bodyBytes));
       print(responseData);
       Chat chat = Chat.fromJson(responseData);
+
+      if (cursor == null) {
+        chatMessages.addAll(chat.data.list);
+        notifyListeners();
+        scrollToBottom();
+      } else {
+        chatMessages.insertAll(0, chat.data.list);
+        notifyListeners();
+      }
       cursor = chat.data.cursor;
-      chatMessages.addAll(chat.data.list);
     } else {
       print('API request failed with status code: ${response.statusCode}');
     }
+    isLoading = false;
+  }
 
-    notifyListeners();
-
-    scrollToBottom();
+  void scrollToCenter(double value) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(value);
+      isLoading = false;
+    });
   }
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      isLoading = false;
     });
   }
 

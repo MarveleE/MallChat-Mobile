@@ -71,7 +71,7 @@ class ListElement {
   factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
         fromUser: FromUser.fromJson(json["fromUser"]),
         message: Message.fromJson(json["message"]),
-        isMe: FromUser.fromJson(json["fromUser"]).uid == 1 ? true : false,
+        isMe: FromUser.fromJson(json["fromUser"]).uid == 11899 ? true : false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -85,7 +85,7 @@ class FromUser {
   String username;
   int uid;
   String avatar;
-  String locPlace;
+  String? locPlace;
   Badge? badge;
 
   FromUser({

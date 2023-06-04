@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mall_chat/Constants/color.dart';
 import 'package:mall_chat/Constants/extension.dart';
 import 'package:mall_chat/model/chat_model.dart';
@@ -53,18 +54,32 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
 
   late TextEditingController _textEditingController;
 
+  late ScrollController _scrollController;
+
+  late ChatDetailViewModel viewModel;
+
   @override
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 800), () {
-        ChatDetailViewModel viewModel =
-            Provider.of<ChatDetailViewModel>(context, listen: false);
+        viewModel = Provider.of<ChatDetailViewModel>(context, listen: false);
+        _scrollController = viewModel.scrollController;
+        _scrollController.addListener(pullToRefreash);
         viewModel.getChatHistory();
         viewModel.startChat();
       });
     });
+  }
+
+  void pullToRefreash() {
+    if (_scrollController.position.pixels <= 20 &&
+        viewModel.isLoading == false &&
+        _scrollController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+      viewModel.getChatHistory();
+    }
   }
 
   @override
@@ -176,46 +191,77 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // MARK - Chat User info
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     clipBehavior: Clip.antiAlias,
                     decoration: const BoxDecoration(shape: BoxShape.circle),
                     child: Image(
                       image: NetworkImage(data.fromUser.avatar),
-                      width: 25,
-                      height: 25,
+                      width: 30,
+                      height: 30,
                     ),
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    data.fromUser.username,
-                    style: TextStyle(
-                      color:
-                          data.isMe ? "#FFFFFF".toColor() : "#000000".toColor(),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
+
+                  // Name
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data.fromUser.username,
+                        style: TextStyle(
+                          color: data.isMe
+                              ? "#FFFFFF".toColor()
+                              : ThemeProvider.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        "(${data.fromUser.locPlace})",
+                        style: TextStyle(
+                          color: data.isMe
+                              ? "#FFFFFF".toColor()
+                              : ThemeProvider.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
+
                   const Spacer(),
+
+                  // Time
                   Text(
                     data.message.sendTime.formatTimestampToDateTime(),
                     style: TextStyle(
-                      color:
-                          data.isMe ? "#FFFFFF".toColor() : "#000000".toColor(),
-                      fontSize: 10,
+                      color: data.isMe
+                          ? "#FFFFFF".toColor()
+                          : ThemeProvider.textSecondary,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
+
               const SizedBox(height: 8),
+
+              // MARK - Chat Message
               Text(
                 data.message.content,
                 style: TextStyle(
                   height: 1.5,
-                  color: data.isMe ? "#FFFFFF".toColor() : "#000000".toColor(),
-                  fontSize: 14,
+                  color: data.isMe
+                      ? "#FFFFFF".toColor()
+                      : ThemeProvider.textActivate,
+                  fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),

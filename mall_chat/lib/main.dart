@@ -17,7 +17,12 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: "SFProDisplay"),
+      theme: ThemeData(
+        fontFamily: "SFMono",
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(letterSpacing: 1),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       home: Navigator(
         onGenerateRoute: (settings) {

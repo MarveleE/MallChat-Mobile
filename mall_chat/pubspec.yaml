@@ -27,13 +27,17 @@ flutter:
     - assets/avatars/
     - assets/1.png
   fonts:
-    - family: SFProDisplay
+    - family: SFMono
       fonts:
-        - asset: assets/fonts/SFProDisplayRegular.OTF
-        - asset: assets/fonts/SFProDisplayMedium.OTF
-          weight: 500
-        - asset: assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF
-          style: italic
-          weight: 900
-        - asset: assets/fonts/SFPRODISPLAYBOLD.OTF
-          weight: 700
+        - asset: assets/fonts/SFMonoBold.OTF
+        - asset: assets/fonts/SFMonoBoldItalic.OTF
+        - asset: assets/fonts/SFMonoHeavy.OTF
+        - asset: assets/fonts/SFMonoHeavyItalic.OTF
+        - asset: assets/fonts/SFMonoLight.OTF
+        - asset: assets/fonts/SFMonoLightItalic.OTF
+        - asset: assets/fonts/SFMonoMedium.OTF
+        - asset: assets/fonts/SFMonoMediumItalic.OTF
+        - asset: assets/fonts/SFMonoRegular.OTF
+        - asset: assets/fonts/SFMonoRegularItalic.OTF
+        - asset: assets/fonts/SFMonoSemibold.OTF
+        - asset: assets/fonts/SFMonoSemiboldItalic.OTF
