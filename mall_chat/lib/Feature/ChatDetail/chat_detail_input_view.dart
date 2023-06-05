@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mall_chat/Constants/color.dart';
 import 'package:mall_chat/Feature/ChatDetail/ViewModel/chat_detail_main_view_model.dart';
 import 'package:provider/provider.dart';
@@ -44,8 +45,12 @@ class _ChatDetailInputViewState extends State<ChatDetailInputView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Image(
-                      image: AssetImage("assets/avatars/01.png"), width: 25),
+                  SvgPicture.asset(
+                    "assets/icons/Plus.svg",
+                    width: 25,
+                    colorFilter:
+                        ColorFilter.mode("#FFB0FE".toColor(), BlendMode.color),
+                  ),
                   const SizedBox(width: 5),
                   Expanded(
                     child: TextField(
@@ -68,6 +73,7 @@ class _ChatDetailInputViewState extends State<ChatDetailInputView> {
                       ),
                     ),
                   ),
+                  SvgPicture.asset("assets/icons/Emoji.svg", width: 25),
                 ],
               ),
             ),
@@ -80,7 +86,7 @@ class _ChatDetailInputViewState extends State<ChatDetailInputView> {
               _textEditingController.text = "";
             },
             child: const Image(
-              image: AssetImage("assets/icons/Plus.png"),
+              image: AssetImage("assets/icons/Send.png"),
               width: 30,
             ),
           ),

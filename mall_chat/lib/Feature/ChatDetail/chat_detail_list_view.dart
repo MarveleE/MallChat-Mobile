@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../../Constants/color.dart';
@@ -25,6 +26,8 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
 
   late ChatDetailViewModel viewModel;
 
+  Timer? reloadDataTimer;
+
   @override
   void initState() {
     super.initState();
@@ -39,12 +42,26 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
     });
   }
 
+  @override
+  void dispose() {
+    reloadDataTimer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void pullToRefreash() {
-    if (_scrollController.position.pixels >=
+    // bool isScrolling = _scrollController.position.isScrollingNotifier.value;
+    // print("${_scrollController.position.pixels}, $isScrolling");
+    if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
-        viewModel.isLoading == false &&
-        _scrollController.position.isScrollingNotifier.value == false) {
-      viewModel.getChatHistory();
+        viewModel.isLoading == false) {
+      reloadDataTimer?.cancel();
+
+      reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
+        // print(
+        //     "Fetching more data, ${_scrollController.position.isScrollingNotifier.value}");
+        viewModel.getChatHistory();
+      });
     }
   }
 
