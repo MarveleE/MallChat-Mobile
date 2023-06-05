@@ -68,6 +68,7 @@ class ChatDetailViewModel extends ChangeNotifier {
         notifyListeners();
         scrollToBottom();
       } else {
+        double maxOffset = scrollController.position.maxScrollExtent;
         chatMessages.addAll(chat.data.list.reversed.toList());
         notifyListeners();
       }
@@ -79,6 +80,14 @@ class ChatDetailViewModel extends ChangeNotifier {
     Future.delayed(const Duration(milliseconds: 1000), () {
       isLoading = false;
       notifyListeners();
+    });
+  }
+
+  void scrollOffset(double value) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(
+        value + 100,
+      );
     });
   }
 

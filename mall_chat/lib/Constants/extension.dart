@@ -15,40 +15,22 @@ extension DateTimeExtension on int {
   }
 }
 
-class PositionRetainedScrollPhysics extends ScrollPhysics {
-  final bool shouldRetain;
-  const PositionRetainedScrollPhysics({super.parent, this.shouldRetain = true});
+class CustomScrollPhysics extends ScrollPhysics {
+  const CustomScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
 
   @override
-  PositionRetainedScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return PositionRetainedScrollPhysics(
-      parent: buildParent(ancestor),
-      shouldRetain: shouldRetain,
-    );
+  CustomScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return CustomScrollPhysics(parent: buildParent(ancestor));
   }
 
   @override
-  double adjustPositionForNewDimensions({
-    required ScrollMetrics oldPosition,
-    required ScrollMetrics newPosition,
-    required bool isScrolling,
-    required double velocity,
-  }) {
-    final position = super.adjustPositionForNewDimensions(
-      oldPosition: oldPosition,
-      newPosition: newPosition,
-      isScrolling: isScrolling,
-      velocity: velocity,
-    );
-
-    final diff = newPosition.maxScrollExtent - oldPosition.maxScrollExtent;
-
-    if (oldPosition.pixels > oldPosition.minScrollExtent &&
-        diff > 0 &&
-        shouldRetain) {
-      return position + diff;
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    if (offset < 0.0) {
+      // 禁用顶部反弹效果
+      return 0.0;
     } else {
-      return position;
+      // 应用底部的默认反弹效果
+      return super.applyPhysicsToUserOffset(position, offset);
     }
   }
 }

@@ -96,27 +96,33 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
               top: keyboardHeight(context),
               bottom: headerHeight(context) + 10,
             ),
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: model.chatMessages.length,
+            physics: const BouncingScrollPhysics(),
+            itemCount: model.chatMessages.length + 1,
             itemBuilder: ((context, index) {
               //MARK - List Row
-              return Padding(
-                // while the RotatedBox Apply in The ListView,
-                // make the top as the bottom, the bottom as the top,
-                //MARK - Padding for the each item's horizontal and item spacing
-                padding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  top: 10,
-                ),
-                child: RotatedBox(
-                  quarterTurns: 2,
-                  child: chatRowView(
-                    context,
-                    model.chatMessages[index],
-                  ),
-                ),
-              );
+              return index == model.chatMessages.length
+                  ? Container(
+                      height: 50,
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(),
+                    )
+                  : Padding(
+                      // while the RotatedBox Apply in The ListView,
+                      // make the top as the bottom, the bottom as the top,
+                      //MARK - Padding for the each item's horizontal and item spacing
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 10,
+                      ),
+                      child: RotatedBox(
+                        quarterTurns: 2,
+                        child: chatRowView(
+                          context,
+                          model.chatMessages[index],
+                        ),
+                      ),
+                    );
             }),
           ),
         ),
