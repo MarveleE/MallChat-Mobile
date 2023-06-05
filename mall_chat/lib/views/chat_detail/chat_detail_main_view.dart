@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:mall_chat/Constants/color.dart';
 import 'package:mall_chat/Constants/extension.dart';
 import 'package:mall_chat/model/chat_model.dart';
@@ -74,10 +73,9 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
   }
 
   void pullToRefreash() {
-    if (_scrollController.position.pixels <= 20 &&
-        viewModel.isLoading == false &&
-        _scrollController.position.userScrollDirection ==
-            ScrollDirection.forward) {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent &&
+        viewModel.isLoading == false) {
       viewModel.getChatHistory();
     }
   }
@@ -89,24 +87,38 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
       Container(
         color: ThemeProvider.backgroundWhite,
         alignment: Alignment.topCenter,
-        child: ListView.builder(
-          controller:
-              Provider.of<ChatDetailViewModel>(context).scrollController,
-          scrollDirection: Axis.vertical,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: model.chatMessages.length,
-          itemBuilder: ((context, index) {
-            return Padding(
-              padding: EdgeInsets.only(
-                  bottom: index == model.chatMessages.length - 1
-                      ? keyboardHeight(context) + 10
-                      : 15,
+        child: RotatedBox(
+          quarterTurns: 2,
+          child: ListView.builder(
+            controller: model.scrollController,
+            scrollDirection: Axis.vertical,
+            padding: EdgeInsets.only(
+              top: keyboardHeight(context),
+              bottom: headerHeight(context) + 10,
+            ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: model.chatMessages.length,
+            itemBuilder: ((context, index) {
+              //MARK - List Row
+              return Padding(
+                // while the RotatedBox Apply in The ListView,
+                // make the top as the bottom, the bottom as the top,
+                //MARK - Padding for the each item's horizontal and item spacing
+                padding: const EdgeInsets.only(
                   left: 15,
                   right: 15,
-                  top: index == 0 ? headerHeight(context) + 15 : 0),
-              child: chatRowView(context, model.chatMessages[index]),
-            );
-          }),
+                  top: 10,
+                ),
+                child: RotatedBox(
+                  quarterTurns: 2,
+                  child: chatRowView(
+                    context,
+                    model.chatMessages[index],
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
       ),
 
@@ -223,12 +235,12 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
                         ),
                       ),
                       Text(
-                        "(${data.fromUser.locPlace})",
+                        "${data.fromUser.locPlace}",
                         style: TextStyle(
                           color: data.isMe
                               ? "#FFFFFF".toColor()
                               : ThemeProvider.textSecondary,
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

@@ -30,7 +30,7 @@ class ChatDetailViewModel extends ChangeNotifier {
       if (responseData["type"] == 4) {
         final socketMessage = SocketMessage.fromJson(responseData);
         print(socketMessage.data.message.content);
-        chatMessages.add(socketMessage.data);
+        chatMessages.insert(0, socketMessage.data);
         notifyListeners();
         scrollToBottom();
       }
@@ -64,35 +64,31 @@ class ChatDetailViewModel extends ChangeNotifier {
       Chat chat = Chat.fromJson(responseData);
 
       if (cursor == null) {
-        chatMessages.addAll(chat.data.list);
+        chatMessages.addAll(chat.data.list.reversed.toList());
         notifyListeners();
         scrollToBottom();
       } else {
-        chatMessages.insertAll(0, chat.data.list);
+        chatMessages.addAll(chat.data.list.reversed.toList());
         notifyListeners();
       }
       cursor = chat.data.cursor;
     } else {
       print('API request failed with status code: ${response.statusCode}');
     }
-    isLoading = false;
-  }
 
-  void scrollToCenter(double value) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(value);
+    Future.delayed(const Duration(milliseconds: 1000), () {
       isLoading = false;
+      notifyListeners();
     });
   }
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.animateTo(
-        scrollController.position.maxScrollExtent,
+        scrollController.position.minScrollExtent,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
-      isLoading = false;
     });
   }
 
