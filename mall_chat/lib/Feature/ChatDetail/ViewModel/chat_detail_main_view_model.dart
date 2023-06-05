@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
-import '../../model/chat_model.dart';
-import '../../model/chat_socket.dart';
+import '../Model/chat_model.dart';
+import '../Model/chat_socket.dart';
 
 class ChatDetailViewModel extends ChangeNotifier {
   List<ListElement> chatMessages = [];
@@ -14,13 +14,59 @@ class ChatDetailViewModel extends ChangeNotifier {
   late Timer timer;
   bool isLoading = false;
 
+  final channel = WebSocketChannel.connect(
+    Uri.parse('wss://api.mallchat.cn/websocket'),
+  );
+
   ChatDetailViewModel() {
     timer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        sendMessage("{type: 2}");
+        sendSocketMessage("{type: 2}");
       },
     );
+  }
+
+  void sendPostRequest(String message) async {
+    print("message: $message");
+
+    const url = "https://api.mallchat.cn/capi/chat/msg";
+
+    Map<String, String> headers = {
+      "Accept": "*/*",
+      "Accept-Language": "en-US,en;q=0.9,zh;q=0.8,zh-CN;q=0.7",
+      "Authorization":
+          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjExODk5LCJjcmVhdGVUaW1lIjoxNjg1OTU2NTcyfQ.Df9mT0y2RECxJNRyV5mAX9iaOqKFPKQJi1GVxGwIwjw",
+      "Connection": "keep-alive",
+      "Content-Type": "application/json; charset=utf-8",
+      "DNT": "1",
+      "Origin": "https://mallchat.cn",
+      "Referer": "https://mallchat.cn/",
+      "Sec-Fetch-Dest": "empty",
+      "Sec-Fetch-Mode": "cors",
+    };
+
+    Map<String, dynamic> data = {"content": message, "roomId": 1};
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(data),
+      );
+
+      if (response.statusCode == 200) {
+        // 请求成功
+        final responseData = json.decode(response.body);
+        print(responseData);
+      } else {
+        // 请求失败
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      // 异常处理
+      print('Error: $e');
+    }
   }
 
   void startChat() {
@@ -32,7 +78,12 @@ class ChatDetailViewModel extends ChangeNotifier {
         print(socketMessage.data.message.content);
         chatMessages.insert(0, socketMessage.data);
         notifyListeners();
-        scrollToBottom();
+
+        if (scrollController.position.pixels == 0) {
+          scrollToBottom();
+        } else {
+          //MARK: - new message indicator
+        }
       }
     }, onError: (error) {
       print(error);
@@ -41,11 +92,7 @@ class ChatDetailViewModel extends ChangeNotifier {
     });
   }
 
-  final channel = WebSocketChannel.connect(
-    Uri.parse('wss://api.mallchat.cn/websocket'),
-  );
-
-  void sendMessage(String message) {
+  void sendSocketMessage(String message) {
     channel.sink.add(message);
   }
 
@@ -68,7 +115,6 @@ class ChatDetailViewModel extends ChangeNotifier {
         notifyListeners();
         scrollToBottom();
       } else {
-        double maxOffset = scrollController.position.maxScrollExtent;
         chatMessages.addAll(chat.data.list.reversed.toList());
         notifyListeners();
       }
@@ -77,10 +123,7 @@ class ChatDetailViewModel extends ChangeNotifier {
       print('API request failed with status code: ${response.statusCode}');
     }
 
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      isLoading = false;
-      notifyListeners();
-    });
+    isLoading = false;
   }
 
   void scrollOffset(double value) {

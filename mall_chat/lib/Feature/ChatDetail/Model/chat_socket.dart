@@ -1,10 +1,5 @@
-// To parse this JSON data, do
-//
-//     final socketMessage = socketMessageFromJson(jsonString);
-
 import 'dart:convert';
-
-import 'package:mall_chat/model/chat_model.dart';
+import 'package:mall_chat/Feature/ChatDetail/Model/chat_model.dart';
 
 SocketMessage socketMessageFromJson(String str) =>
     SocketMessage.fromJson(json.decode(str));

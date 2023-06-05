@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mall_chat/views/home/chat_home_view.dart';
-import 'package:mall_chat/views/tab_bar/tab_bar_view.dart';
+import 'package:mall_chat/Feature/Home/home_main_view.dart';
+import 'package:mall_chat/Feature/TabBar/tab_bar_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -20,8 +20,8 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: "SFMono",
         textTheme: const TextTheme(
-          bodyMedium: TextStyle(letterSpacing: 1),
-        ),
+            // bodyMedium: TextStyle(letterSpacing: 0.),
+            ),
       ),
       debugShowCheckedModeBanner: false,
       home: Navigator(
@@ -32,8 +32,8 @@ class MainApp extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
-                    ChatHomeView(),
-                    ChatTabBarView(),
+                    HomeChatView(),
+                    HomeTabBarView(),
                   ],
                 ),
               ),

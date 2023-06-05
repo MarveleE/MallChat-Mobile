@@ -1,39 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mall_chat/Constants/color.dart';
 import 'package:mall_chat/Constants/extension.dart';
-import 'package:mall_chat/model/chat_model.dart';
-import 'package:mall_chat/views/chat_detail/chat_detail_main_viewModel.dart';
 import 'package:provider/provider.dart';
-
-class ChatDetailMainView extends StatefulWidget {
-  const ChatDetailMainView({super.key});
-
-  @override
-  State<ChatDetailMainView> createState() => _ChatDetailMainViewState();
-}
-
-class _ChatDetailMainViewState extends State<ChatDetailMainView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ChatDetailViewModel>(
-      create: (_) => ChatDetailViewModel(),
-      child: const Scaffold(
-        body: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            ChatDetailListView(),
-            ChatDetailNavigationBarView(),
-          ],
-        ),
-      ),
-    );
-  }
-}
+import '../../Constants/color.dart';
+import 'Model/chat_model.dart';
+import 'ViewModel/chat_detail_main_view_model.dart';
 
 class ChatDetailListView extends StatefulWidget {
   const ChatDetailListView({super.key});
@@ -75,7 +46,8 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
   void pullToRefreash() {
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
-        viewModel.isLoading == false) {
+        viewModel.isLoading == false &&
+        _scrollController.position.isScrollingNotifier.value == false) {
       viewModel.getChatHistory();
     }
   }
@@ -104,7 +76,7 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
                   ? Container(
                       height: 50,
                       alignment: Alignment.center,
-                      child: const CircularProgressIndicator(),
+                      child: const CupertinoActivityIndicator(animating: true),
                     )
                   : Padding(
                       // while the RotatedBox Apply in The ListView,
@@ -180,7 +152,11 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
             ),
             const SizedBox(width: 10),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                //TODO: When send meesage, be sure the list has the message then reset the textfield
+                model.sendPostRequest(_textEditingController.text);
+                _textEditingController.text = "";
+              },
               child: const Image(
                 image: AssetImage("assets/icons/Plus.png"),
                 width: 30,
@@ -287,56 +263,6 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class ChatDetailNavigationBarView extends StatelessWidget {
-  const ChatDetailNavigationBarView({super.key});
-
-  double headerHeight(BuildContext context) {
-    return MediaQuery.of(context).padding.top + 60;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-      alignment: Alignment.bottomCenter,
-      width: MediaQuery.of(context).size.width,
-      height: headerHeight(context),
-      color: Colors.white,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Image(
-              image: AssetImage("assets/icons/Back.png"),
-              width: 30,
-            ),
-          ),
-          const Spacer(),
-          Stack(
-            children: [
-              const Image(
-                image: AssetImage("assets/avatars/05.png"),
-                width: 40,
-                height: 40,
-              ),
-              Transform.translate(
-                offset: const Offset(-28, -8),
-                child: const Image(
-                  image: AssetImage("assets/avatars/07.png"),
-                  width: 40,
-                  height: 40,
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-        ],
-      ),
     );
   }
 }
