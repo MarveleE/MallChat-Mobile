@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +21,8 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: "SFMono",
         textTheme: const TextTheme(
-            // bodyMedium: TextStyle(letterSpacing: 0.),
-            ),
+          bodyMedium: TextStyle(fontFeatures: [FontFeature.disable("smcp")]),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: Navigator(

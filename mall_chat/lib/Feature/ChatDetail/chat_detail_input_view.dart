@@ -4,6 +4,7 @@ import 'package:mall_chat/Constants/color.dart';
 import 'package:mall_chat/Feature/ChatDetail/ViewModel/chat_detail_main_view_model.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class ChatDetailInputView extends StatefulWidget {
   ChatDetailInputView({super.key, required this.keyboardHeight});
   double keyboardHeight;
