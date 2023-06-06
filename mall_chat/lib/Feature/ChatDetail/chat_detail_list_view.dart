@@ -24,22 +24,23 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
 
   late ScrollController _scrollController;
 
-  late ChatDetailViewModel viewModel;
+  // late ChatDetailViewModel viewModel;
 
   Timer? reloadDataTimer;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 800), () {
-        viewModel = Provider.of<ChatDetailViewModel>(context, listen: false);
-        _scrollController = viewModel.scrollController;
-        _scrollController.addListener(pullToRefreash);
-        viewModel.getChatHistory();
-        viewModel.startChat();
-      });
-    });
+    print("chat detail list init");
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Future.delayed(const Duration(milliseconds: 800), () {
+    //     viewModel = Provider.of<ChatDetailViewModel>(context, listen: false);
+    //     _scrollController = viewModel.scrollController;
+    //     _scrollController.addListener(pullToRefreash);
+    //     viewModel.getChatHistory();
+    //     viewModel.startChat();
+    //   });
+    // });
   }
 
   @override
@@ -49,25 +50,21 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
     super.dispose();
   }
 
-  void pullToRefreash() {
-    // bool isScrolling = _scrollController.position.isScrollingNotifier.value;
-    // print("${_scrollController.position.pixels}, $isScrolling");
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        viewModel.isLoading == false) {
-      reloadDataTimer?.cancel();
+  // void pullToRefreash() {
+  //   if (_scrollController.position.pixels ==
+  //           _scrollController.position.maxScrollExtent &&
+  //       viewModel.isLoading == false) {
+  //     reloadDataTimer?.cancel();
 
-      reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
-        // print(
-        //     "Fetching more data, ${_scrollController.position.isScrollingNotifier.value}");
-        viewModel.getChatHistory();
-      });
-    }
-  }
+  //     reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
+  //       viewModel.getChatHistory();
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    ChatDetailViewModel model = Provider.of<ChatDetailViewModel>(context);
+    final viewModel = Provider.of<ChatDetailViewModel>(context);
     return Stack(alignment: Alignment.bottomCenter, children: [
       Container(
         color: ThemeProvider.backgroundWhite,
@@ -75,17 +72,17 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
         child: RotatedBox(
           quarterTurns: 2,
           child: ListView.builder(
-            controller: model.scrollController,
+            controller: viewModel.scrollController,
             scrollDirection: Axis.vertical,
             padding: EdgeInsets.only(
               top: keyboardHeight(context),
               bottom: headerHeight(context) + 10,
             ),
             physics: const BouncingScrollPhysics(),
-            itemCount: model.chatMessages.length + 1,
+            itemCount: viewModel.chatMessages.length + 1,
             itemBuilder: ((context, index) {
               //MARK - List Row
-              return index == model.chatMessages.length
+              return index == viewModel.chatMessages.length
                   ? Container(
                       height: 50,
                       alignment: Alignment.center,
@@ -103,7 +100,8 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
                       child: RotatedBox(
                         quarterTurns: 2,
                         child: ChatDetailListCellView(
-                            context: context, data: model.chatMessages[index]),
+                            context: context,
+                            data: viewModel.chatMessages[index]),
                       ),
                     );
             }),

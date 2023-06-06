@@ -19,6 +19,7 @@ class ChatDetailViewModel extends ChangeNotifier {
   );
 
   ChatDetailViewModel() {
+    print("init ViewModel");
     timer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
@@ -79,11 +80,11 @@ class ChatDetailViewModel extends ChangeNotifier {
         chatMessages.insert(0, socketMessage.data);
         notifyListeners();
 
-        if (scrollController.position.pixels == 0) {
-          scrollToBottom();
-        } else {
-          //MARK: - new message indicator
-        }
+        // if (scrollController.position.pixels == 0) {
+        //   // scrollToBottom();
+        // } else {
+        //   //MARK: - new message indicator
+        // }
       }
     }, onError: (error) {
       print(error);
@@ -113,7 +114,7 @@ class ChatDetailViewModel extends ChangeNotifier {
       if (cursor == null) {
         chatMessages.addAll(chat.data.list.reversed.toList());
         notifyListeners();
-        scrollToBottom();
+        // scrollToBottom();
       } else {
         chatMessages.addAll(chat.data.list.reversed.toList());
         notifyListeners();

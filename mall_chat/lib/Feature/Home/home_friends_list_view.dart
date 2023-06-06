@@ -3,9 +3,14 @@ import 'FriendsList/Model/home_friends_data.dart';
 import 'FriendsList/home_friends_list_cell_view.dart';
 
 // ignore: must_be_immutable
-class ChatHomeFriendsView extends StatelessWidget {
-  ChatHomeFriendsView({Key? key}) : super(key: key);
+class ChatHomeFriendsView extends StatefulWidget {
+  const ChatHomeFriendsView({super.key});
 
+  @override
+  State<ChatHomeFriendsView> createState() => _ChatHomeFriendsViewState();
+}
+
+class _ChatHomeFriendsViewState extends State<ChatHomeFriendsView> {
   List<ChatHomeFriendsData> friendData = [
     ChatHomeFriendsData(name: "Ass Story", imageName: "01.png"),
     ChatHomeFriendsData(name: "Colleen", imageName: "02.png"),

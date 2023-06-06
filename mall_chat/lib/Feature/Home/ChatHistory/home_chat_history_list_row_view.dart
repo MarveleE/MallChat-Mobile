@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mall_chat/Constants/extension.dart';
+import 'package:mall_chat/Feature/ChatDetail/Model/chat_model.dart';
 import '../../../Constants/color.dart';
 import '../../ChatDetail/chat_detail_main_view.dart';
-import 'Model/home_chat_history_data.dart';
 
 // ignore: must_be_immutable
 class HomeChatHistoryRowView extends StatelessWidget {
   HomeChatHistoryRowView({super.key, required this.chatRowData});
-  ChatHomeListData chatRowData;
+  ListElement chatRowData;
 
   @override
   Widget build(BuildContext context) {
+    print("${chatRowData.message.content} was refreshed");
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => Navigator.push(
@@ -37,7 +39,14 @@ class HomeChatHistoryRowView extends StatelessWidget {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
-        Image(image: AssetImage(chatRowData.avatarName), width: 50, height: 50),
+        Container(
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          clipBehavior: Clip.antiAlias,
+          child: Image(
+              image: NetworkImage(chatRowData.fromUser.avatar),
+              width: 50,
+              height: 50),
+        ),
         Transform.translate(
           offset: const Offset(0, 9),
           child: Container(
@@ -81,15 +90,15 @@ class HomeChatHistoryRowView extends StatelessWidget {
             color: "#7ED3B2".toColor(),
             borderRadius: BorderRadius.circular(8.5),
           ),
-          child: Text(
-            chatRowData.unreadMessage.toString(),
-            style: const TextStyle(
+          child: const Text(
+            "2",
+            style: TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w700, fontSize: 10),
           ),
         ),
         const SizedBox(height: 5),
         Text(
-          chatRowData.time,
+          chatRowData.message.sendTime.formatTimestampToDateTime(),
           style: TextStyle(
               color: ThemeProvider.textSecondary,
               fontWeight: FontWeight.w600,
@@ -104,7 +113,7 @@ class HomeChatHistoryRowView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          chatRowData.name,
+          chatRowData.fromUser.username,
           style: TextStyle(
               color: ThemeProvider.textActivate,
               fontWeight: FontWeight.bold,
@@ -112,7 +121,8 @@ class HomeChatHistoryRowView extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         Text(
-          chatRowData.message,
+          chatRowData.message.content,
+          maxLines: 1,
           style: TextStyle(
               color: ThemeProvider.textSecondary,
               fontWeight: FontWeight.w600,
