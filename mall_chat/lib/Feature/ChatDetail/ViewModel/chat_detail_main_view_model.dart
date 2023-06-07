@@ -9,37 +9,19 @@ class ChatDetailViewModel extends ChangeNotifier {
   ChatMessageService messageService = ChatMessageService();
   ChatSocketService socketService = ChatSocketService();
 
-  ScrollController scrollController = ScrollController();
-
   ChatDetailViewModel() {
     print("init ViewModel");
     messageService.getHistory().then((value) {
-      chatMessages = value;
-      notifyListeners();
-      // scrollToBottom();
+      addMessageData(value);
     });
     socketService.onMessageReceived = (message) {
       chatMessages.insert(0, message);
       notifyListeners();
-      // scrollToBottom();
     };
   }
 
-  void scrollOffset(double value) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(
-        value + 100,
-      );
-    });
-  }
-
-  void scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.animateTo(
-        scrollController.position.minScrollExtent,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    });
+  void addMessageData(List<ListElement> messages) {
+    chatMessages.addAll(messages.reversed);
+    notifyListeners();
   }
 }

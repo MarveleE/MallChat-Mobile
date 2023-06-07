@@ -56,8 +56,6 @@ class ChatMessageService extends BaseService {
       );
       return response.then((value) {
         if (value.statusCode == 200) {
-          // 请求成功
-          final responseData = json.decode(value.body);
           print("Posting message success: $message");
         } else {
           // 请求失败

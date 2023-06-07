@@ -122,6 +122,7 @@ class HomeChatHistoryRowView extends StatelessWidget {
         const SizedBox(height: 5),
         Text(
           chatRowData.message.content,
+          overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
               color: ThemeProvider.textSecondary,

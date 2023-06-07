@@ -7,11 +7,9 @@ import 'Model/chat_model.dart';
 class ChatDetailListCellView extends StatelessWidget {
   const ChatDetailListCellView({
     super.key,
-    required this.context,
     required this.data,
   });
 
-  final BuildContext context;
   final ListElement data;
 
   @override
