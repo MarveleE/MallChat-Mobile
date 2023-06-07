@@ -20,7 +20,7 @@ class HomeChatHistoryContainnerView extends StatelessWidget {
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.italic),
         ),
-        const HomeChatHistoryListView(),
+        const Expanded(child: HomeChatHistoryListView()),
       ],
     );
   }

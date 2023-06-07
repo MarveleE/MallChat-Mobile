@@ -22,9 +22,7 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
     return MediaQuery.of(context).padding.bottom + 60;
   }
 
-  late ScrollController _scrollController;
-
-  // late ChatDetailViewModel viewModel;
+  final ScrollController _scrollController = ScrollController();
 
   Timer? reloadDataTimer;
 
@@ -32,15 +30,7 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
   void initState() {
     super.initState();
     print("chat detail list init");
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Future.delayed(const Duration(milliseconds: 800), () {
-    //     viewModel = Provider.of<ChatDetailViewModel>(context, listen: false);
-    //     _scrollController = viewModel.scrollController;
-    //     _scrollController.addListener(pullToRefreash);
-    //     viewModel.getChatHistory();
-    //     viewModel.startChat();
-    //   });
-    // });
+    _scrollController.addListener(pullToRefreash);
   }
 
   @override
@@ -50,69 +40,72 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
     super.dispose();
   }
 
-  // void pullToRefreash() {
-  //   if (_scrollController.position.pixels ==
-  //           _scrollController.position.maxScrollExtent &&
-  //       viewModel.isLoading == false) {
-  //     reloadDataTimer?.cancel();
+  void pullToRefreash() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      print("pull to refreash");
 
-  //     reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
-  //       viewModel.getChatHistory();
-  //     });
-  //   }
-  // }
+      reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
+        reloadDataTimer?.cancel();
+        Provider.of<ChatDetailViewModel>(context, listen: false)
+            .getChatHistory();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ChatDetailViewModel>(context);
-    return Stack(alignment: Alignment.bottomCenter, children: [
-      Container(
-        color: ThemeProvider.backgroundWhite,
-        alignment: Alignment.topCenter,
-        child: RotatedBox(
-          quarterTurns: 2,
-          child: ListView.builder(
-            controller: viewModel.scrollController,
-            scrollDirection: Axis.vertical,
-            padding: EdgeInsets.only(
-              top: keyboardHeight(context),
-              bottom: headerHeight(context) + 10,
+    return Consumer<ChatDetailViewModel>(builder: (context, viewModel, child) {
+      return Stack(alignment: Alignment.bottomCenter, children: [
+        Container(
+          color: ThemeProvider.backgroundWhite,
+          alignment: Alignment.topCenter,
+          child: RotatedBox(
+            quarterTurns: 2,
+            child: ListView.builder(
+              controller: _scrollController,
+              scrollDirection: Axis.vertical,
+              padding: EdgeInsets.only(
+                top: keyboardHeight(context),
+                bottom: headerHeight(context) + 10,
+              ),
+              physics: const BouncingScrollPhysics(),
+              itemCount: viewModel.chatMessages.length + 1,
+              itemBuilder: ((context, index) {
+                //MARK - List Row
+                return index == viewModel.chatMessages.length
+                    ? Container(
+                        height: 50,
+                        alignment: Alignment.center,
+                        child:
+                            const CupertinoActivityIndicator(animating: true),
+                      )
+                    : Padding(
+                        // while the RotatedBox Apply in The ListView,
+                        // make the top as the bottom, the bottom as the top,
+                        //MARK - Padding for the each item's horizontal and item spacing
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          top: 10,
+                        ),
+                        child: RotatedBox(
+                          quarterTurns: 2,
+                          child: ChatDetailListCellView(
+                              context: context,
+                              data: viewModel.chatMessages[index]),
+                        ),
+                      );
+              }),
             ),
-            physics: const BouncingScrollPhysics(),
-            itemCount: viewModel.chatMessages.length + 1,
-            itemBuilder: ((context, index) {
-              //MARK - List Row
-              return index == viewModel.chatMessages.length
-                  ? Container(
-                      height: 50,
-                      alignment: Alignment.center,
-                      child: const CupertinoActivityIndicator(animating: true),
-                    )
-                  : Padding(
-                      // while the RotatedBox Apply in The ListView,
-                      // make the top as the bottom, the bottom as the top,
-                      //MARK - Padding for the each item's horizontal and item spacing
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 10,
-                      ),
-                      child: RotatedBox(
-                        quarterTurns: 2,
-                        child: ChatDetailListCellView(
-                            context: context,
-                            data: viewModel.chatMessages[index]),
-                      ),
-                    );
-            }),
           ),
         ),
-      ),
 
-      //MARK - Chat Input View
-      ChatDetailInputView(
-        keyboardHeight: keyboardHeight(context),
-      ),
-    ]);
+        //MARK - Chat Input View
+        ChatDetailInputView(
+          keyboardHeight: keyboardHeight(context),
+        ),
+      ]);
+    });
   }
 }

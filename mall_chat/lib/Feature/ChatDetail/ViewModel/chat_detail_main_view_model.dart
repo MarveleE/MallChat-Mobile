@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../Model/chat_model.dart';
 import '../Model/chat_socket.dart';
 
+// https://api.mallchat.cn/capi/chat/public/member/page?pageSize=20
 class ChatDetailViewModel extends ChangeNotifier {
   List<ListElement> chatMessages = [];
   late StreamSubscription<dynamic> subscription;
@@ -26,6 +27,8 @@ class ChatDetailViewModel extends ChangeNotifier {
         sendSocketMessage("{type: 2}");
       },
     );
+    getChatHistory();
+    startChat();
   }
 
   void sendPostRequest(String message) async {
@@ -71,6 +74,7 @@ class ChatDetailViewModel extends ChangeNotifier {
   }
 
   void startChat() {
+    print("Start Socket connet");
     subscription = channel.stream.listen((event) {
       print(event);
       final responseData = json.decode(event);

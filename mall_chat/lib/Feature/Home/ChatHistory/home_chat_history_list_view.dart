@@ -20,12 +20,6 @@ class _HomeChatHistoryListViewState extends State<HomeChatHistoryListView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("Get ViewModel");
-      viewModel = Provider.of<ChatDetailViewModel>(context, listen: false);
-      viewModel.getChatHistory();
-      viewModel.startChat();
-    });
   }
 
   List<ChatHomeListData> chatListData = [
@@ -63,22 +57,19 @@ class _HomeChatHistoryListViewState extends State<HomeChatHistoryListView> {
 
   @override
   Widget build(BuildContext context) {
-    print('widget refresh');
-    return Consumer<ChatDetailViewModel>(
-      builder: (contexts, viewModel, _) {
-        return ListView.builder(
-          padding: const EdgeInsets.only(top: 20),
-          scrollDirection: Axis.vertical,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: viewModel.chatMessages.isEmpty ? 0 : 1,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return HomeChatHistoryRowView(
-                chatRowData: viewModel.chatMessages.isEmpty
-                    ? generateMockData()[0]
-                    : viewModel.chatMessages.first);
-          },
-        );
+    viewModel = Provider.of<ChatDetailViewModel>(context, listen: true);
+    print("Home List View rebuid");
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 20),
+      scrollDirection: Axis.vertical,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: viewModel.chatMessages.isEmpty ? 0 : 1,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return HomeChatHistoryRowView(
+            chatRowData: viewModel.chatMessages.isEmpty
+                ? generateMockData()[0]
+                : viewModel.chatMessages.first);
       },
     );
   }
