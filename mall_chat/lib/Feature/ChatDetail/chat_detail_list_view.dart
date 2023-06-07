@@ -43,10 +43,9 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
   void pullToRefreash() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      print("pull to refreash");
-
       reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
         reloadDataTimer?.cancel();
+        print("pull to refreash");
         Provider.of<ChatDetailViewModel>(context, listen: false)
             .getChatHistory();
       });
@@ -55,57 +54,55 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatDetailViewModel>(builder: (context, viewModel, child) {
-      return Stack(alignment: Alignment.bottomCenter, children: [
-        Container(
-          color: ThemeProvider.backgroundWhite,
-          alignment: Alignment.topCenter,
-          child: RotatedBox(
-            quarterTurns: 2,
-            child: ListView.builder(
-              controller: _scrollController,
-              scrollDirection: Axis.vertical,
-              padding: EdgeInsets.only(
-                top: keyboardHeight(context),
-                bottom: headerHeight(context) + 10,
-              ),
-              physics: const BouncingScrollPhysics(),
-              itemCount: viewModel.chatMessages.length + 1,
-              itemBuilder: ((context, index) {
-                //MARK - List Row
-                return index == viewModel.chatMessages.length
-                    ? Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        child:
-                            const CupertinoActivityIndicator(animating: true),
-                      )
-                    : Padding(
-                        // while the RotatedBox Apply in The ListView,
-                        // make the top as the bottom, the bottom as the top,
-                        //MARK - Padding for the each item's horizontal and item spacing
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 10,
-                        ),
-                        child: RotatedBox(
-                          quarterTurns: 2,
-                          child: ChatDetailListCellView(
-                              context: context,
-                              data: viewModel.chatMessages[index]),
-                        ),
-                      );
-              }),
+    final viewModel = Provider.of<ChatDetailViewModel>(context, listen: true);
+    return Stack(alignment: Alignment.bottomCenter, children: [
+      Container(
+        color: ThemeProvider.backgroundWhite,
+        alignment: Alignment.topCenter,
+        child: RotatedBox(
+          quarterTurns: 2,
+          child: ListView.builder(
+            controller: _scrollController,
+            scrollDirection: Axis.vertical,
+            padding: EdgeInsets.only(
+              top: keyboardHeight(context),
+              bottom: headerHeight(context) + 10,
             ),
+            physics: const BouncingScrollPhysics(),
+            itemCount: viewModel.chatMessages.length + 1,
+            itemBuilder: ((context, index) {
+              //MARK - List Row
+              return index == viewModel.chatMessages.length
+                  ? Container(
+                      height: 50,
+                      alignment: Alignment.center,
+                      child: const CupertinoActivityIndicator(animating: true),
+                    )
+                  : Padding(
+                      // while the RotatedBox Apply in The ListView,
+                      // make the top as the bottom, the bottom as the top,
+                      //MARK - Padding for the each item's horizontal and item spacing
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 10,
+                      ),
+                      child: RotatedBox(
+                        quarterTurns: 2,
+                        child: ChatDetailListCellView(
+                            context: context,
+                            data: viewModel.chatMessages[index]),
+                      ),
+                    );
+            }),
           ),
         ),
+      ),
 
-        //MARK - Chat Input View
-        ChatDetailInputView(
-          keyboardHeight: keyboardHeight(context),
-        ),
-      ]);
-    });
+      //MARK - Chat Input View
+      ChatDetailInputView(
+        keyboardHeight: keyboardHeight(context),
+      ),
+    ]);
   }
 }
