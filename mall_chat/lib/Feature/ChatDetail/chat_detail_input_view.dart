@@ -83,7 +83,7 @@ class _ChatDetailInputViewState extends State<ChatDetailInputView> {
           GestureDetector(
             onTap: () {
               //TODO: When send meesage, be sure the list has the message then reset the textfield
-              model.sendPostRequest(_textEditingController.text);
+              model.messageService.sendPostRequest(_textEditingController.text);
               _textEditingController.text = "";
             },
             child: const Image(

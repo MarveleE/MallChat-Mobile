@@ -43,11 +43,12 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
   void pullToRefreash() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
+      reloadDataTimer?.cancel();
       reloadDataTimer = Timer(const Duration(milliseconds: 500), () {
-        reloadDataTimer?.cancel();
         print("pull to refreash");
         Provider.of<ChatDetailViewModel>(context, listen: false)
-            .getChatHistory();
+            .messageService
+            .getHistory();
       });
     }
   }
