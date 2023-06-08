@@ -23,6 +23,7 @@ class HomeChatHistoryRowView extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 30),
         alignment: Alignment.topCenter,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             avatar(),
             const SizedBox(width: 10),
@@ -35,46 +36,15 @@ class HomeChatHistoryRowView extends StatelessWidget {
     );
   }
 
-  Stack avatar() {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          decoration: const BoxDecoration(shape: BoxShape.circle),
-          clipBehavior: Clip.antiAlias,
-          child: Image(
-              image: NetworkImage(chatRowData.fromUser.avatar),
-              width: 50,
-              height: 50),
-        ),
-        Transform.translate(
-          offset: const Offset(0, 9),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 60),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(left: 7, right: 7),
-            height: 20,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(130),
-                boxShadow: const [
-                  BoxShadow(
-                    offset: Offset(0, 0),
-                    blurRadius: 8,
-                    spreadRadius: -4,
-                    color: Color(0xFF6F6F87),
-                  ),
-                ]),
-            child: Text("Awesomesss",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 10,
-                    color: ThemeProvider.textActivate,
-                    fontWeight: FontWeight.bold)),
-          ),
-        )
-      ],
+  Container avatar() {
+    return Container(
+      decoration: const BoxDecoration(shape: BoxShape.circle),
+      clipBehavior: Clip.antiAlias,
+      child: const Image(
+          image: AssetImage("assets/avatars/MallChat.png"),
+          fit: BoxFit.cover,
+          width: 50,
+          height: 50),
     );
   }
 
@@ -113,21 +83,24 @@ class HomeChatHistoryRowView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          chatRowData.fromUser.username,
+          "MallChat用户群",
           style: TextStyle(
               color: ThemeProvider.textActivate,
               fontWeight: FontWeight.bold,
               fontSize: 15),
         ),
         const SizedBox(height: 5),
-        Text(
-          chatRowData.message.content,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          style: TextStyle(
-              color: ThemeProvider.textSecondary,
-              fontWeight: FontWeight.w600,
-              fontSize: 12),
+        Expanded(
+          child: Text(
+            "${chatRowData.fromUser.username}: ${chatRowData.message.content}",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            softWrap: false,
+            style: TextStyle(
+                color: ThemeProvider.textSecondary,
+                fontWeight: FontWeight.w600,
+                fontSize: 12),
+          ),
         ),
       ],
     );

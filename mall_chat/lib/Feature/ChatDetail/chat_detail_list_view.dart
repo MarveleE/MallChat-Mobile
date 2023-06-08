@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../../Constants/color.dart';
+import '../APIServer/user_service.dart';
 import 'ViewModel/chat_detail_main_view_model.dart';
 import 'chat_detail_input_view.dart';
 import 'chat_detail_list_cell_view.dart';
@@ -81,7 +82,11 @@ class _ChatDetailListViewState extends State<ChatDetailListView> {
             quarterTurns: 2,
             child: Consumer<ChatDetailViewModel>(
               builder: (context, viewModel, child) {
-                scrollTo(0, animation: true);
+                viewModel.onUserDataReceived = (userData) {
+                  User user = Provider.of<User>(context, listen: true);
+                  user.memberData = userData;
+                  viewModel.toggleShowLogin;
+                };
                 return ListView.builder(
                   controller: _scrollController,
                   scrollDirection: Axis.vertical,

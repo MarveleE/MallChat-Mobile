@@ -1,15 +1,42 @@
-class User {
-  static final userHeader = {
-    "Accept": "*/*",
-    "Accept-Language": "en-US,en;q=0.9,zh;q=0.8,zh-CN;q=0.7",
-    "Authorization":
-        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjExODk5LCJjcmVhdGVUaW1lIjoxNjg1OTU2NTcyfQ.Df9mT0y2RECxJNRyV5mAX9iaOqKFPKQJi1GVxGwIwjw",
-    "Connection": "keep-alive",
-    "Content-Type": "application/json; charset=utf-8",
-    "DNT": "1",
-    "Origin": "https://mallchat.cn",
-    "Referer": "https://mallchat.cn/",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-  };
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import '../../main.dart';
+import 'Model/member_model.dart';
+
+class User extends ChangeNotifier {
+  MemberData? _memberData;
+
+  MemberData? get memberData {
+    if (_memberData == null) {
+      MemberData? data = loadData();
+      _memberData = data;
+    }
+    return _memberData;
+  }
+
+  set memberData(MemberData? value) {
+    _memberData = value;
+
+    saveData(value);
+
+    notifyListeners();
+  }
+
+  static String prefrencesKey = "user-data";
+
+  saveData(MemberData? myObject) {
+    String jsonString = json.encode(myObject?.toJson());
+    print("Save $jsonString to local");
+    prefs.setString(prefrencesKey, jsonString);
+  }
+
+  MemberData? loadData() {
+    String? jsonString = prefs.getString(prefrencesKey);
+    print("get $jsonString from local");
+    if (jsonString != null) {
+      return MemberData.fromJson(json.decode(jsonString));
+    } else {
+      return null;
+    }
+  }
 }

@@ -74,7 +74,11 @@ class _ChatDetailInputViewState extends State<ChatDetailInputView> {
                       ),
                     ),
                   ),
-                  SvgPicture.asset("assets/icons/Emoji.svg", width: 25),
+                  GestureDetector(
+                    onTap: () => model.socketService.requestLoginUrl(),
+                    child:
+                        SvgPicture.asset("assets/icons/Emoji.svg", width: 25),
+                  ),
                 ],
               ),
             ),
@@ -83,7 +87,7 @@ class _ChatDetailInputViewState extends State<ChatDetailInputView> {
           GestureDetector(
             onTap: () {
               //TODO: When send meesage, be sure the list has the message then reset the textfield
-              model.messageService.sendPostRequest(_textEditingController.text);
+              model.sendMessage(_textEditingController.text);
               _textEditingController.text = "";
             },
             child: const Image(

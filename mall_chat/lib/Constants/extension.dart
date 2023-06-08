@@ -8,8 +8,7 @@ extension DateTimeExtension on int {
     DateTime dateTime =
         DateTime.fromMillisecondsSinceEpoch(timestamp); // 将时间戳转换为 DateTime
 
-    String formattedDateTime =
-        DateFormat('HH:mm:ss').format(dateTime); // 格式化日期时间
+    String formattedDateTime = DateFormat('HH:mm').format(dateTime); // 格式化日期时间
 
     return formattedDateTime;
   }
